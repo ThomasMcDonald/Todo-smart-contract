@@ -1,3 +1,3 @@
-# Smart Contract for a simple Todo implementation
+### Smart Contract for a simple Todo implementation
 
 
