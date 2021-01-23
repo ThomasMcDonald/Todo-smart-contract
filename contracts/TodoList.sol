@@ -8,8 +8,9 @@ contract TodoList {
 	}
 
 
-	event newTask(uint _taskId, string _name, string _description);
-	event taskActioned(uint _taskId, bool _isComplete);
+	event newTask(uint taskId, string name, string description);
+	event taskActioned(uint _askId, bool isComplete);
+	
 	modifier isTaskOwner(uint _taskId){
 		require(msg.sender == taskToOwner[_taskId]); // make sure that the task is owned by sender
 		_;	
