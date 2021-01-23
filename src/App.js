@@ -72,7 +72,7 @@ function App() {
   const [task, setTask] = useState({name: '', description:''});
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const web3 = new Web3(Web3.givenProvider || 'HTTP://127.0.0.1:7545');
+  const web3 = new Web3(Web3.givenProvider || process.env.REACT_APP_BLOCKCHAIN_URL);
 
   const createTask = (e) => {
     e.preventDefault();
