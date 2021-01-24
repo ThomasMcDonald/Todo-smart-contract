@@ -6,8 +6,9 @@ import Form from 'react-bootstrap/Form';
 
 import Web3 from 'web3';
 import React, { useState, useEffect } from 'react';
-import {todoContractAddress, todoABI} from './config';
+import { todoABI } from './config';
 
+const todoContractAddress = process.env.REACT_APP_SMART_CONTRACT_ADDRESS;
 
 function Header({children}){
   return <Navbar bg="dark" variant="dark">
@@ -79,6 +80,7 @@ function App() {
     const todoContract = new web3.eth.Contract(todoABI, todoContractAddress)
 
     todoContract.methods.createTask(task.name, task.description).send({from: user}).on('receipt', (receipt) => {
+      console.log(receipt.events.newTask);
 
       setTasks(tasks.concat(receipt.events.newTask.returnValues))
 
@@ -121,20 +123,25 @@ function App() {
   }
 
   const loadTasks = async () => {
-    if(user){
-      setLoading(true);
-      const todoContract = new web3.eth.Contract(todoABI, todoContractAddress)
-
-      const tasksByOwner = await todoContract.methods.getTasksByOwner(user).call();
-      const newTasks = [];
-
-      for(const index of tasksByOwner){
-        const task = await todoContract.methods.taskList(index).call();
-        newTasks.push(task);
+    try{
+      if(user){
+        setLoading(true);
+        const todoContract = new web3.eth.Contract(todoABI, todoContractAddress)
+  
+        const tasksByOwner = await todoContract.methods.getTasksByOwner(user).call();
+        const newTasks = [];
+  
+        for(const index of tasksByOwner){
+          const task = await todoContract.methods.taskList(index).call();
+          newTasks.push(task);
+        }
+        setTasks(newTasks);
+        setLoading(false);
       }
-      setTasks(newTasks);
-      setLoading(false);
+    }catch(err){
+      console.error(err);
     }
+    
   };
 
 
